@@ -51,8 +51,10 @@ public class UserInterface {
     private Field getFieldFromAI() {
         if (activePlayer == ActivePlayer.BLUE) {
             return bluePlayer.closeLineOrRandom();
+//            return null;
         } else {
             return redPlayer.makeRandomMove();
+//            return null;
         }
     }
 

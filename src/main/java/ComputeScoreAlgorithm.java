@@ -17,58 +17,43 @@ public class ComputeScoreAlgorithm {
         int redScore = 0;
         int blueScore = 0;
         if (isRowFilled(coloredField)) {
-            int rownum = coloredField.getRow();
-            List<Field> row = new ArrayList<>(board.getRow(rownum));
-            row.sort(Comparator.comparing(Field::getCol));
-            redScore += getScoreForPlayer(row, redPlayer);
-            blueScore += getScoreForPlayer(row, bluePlayer);
+            if (coloredField.getStatus()== Field.FieldStatus.RED){
+                redScore += board.getSize();
+            }else{
+                blueScore += board.getSize();
+            }
         }
         if (isColumnFilled(coloredField)) {
-            int colnum = coloredField.getCol();
-            List<Field> column = new ArrayList<>(board.getColumn(colnum));
-            column.sort(Comparator.comparing(Field::getRow));
 
-            redScore += getScoreForPlayer(column, redPlayer);
-            blueScore += getScoreForPlayer(column, bluePlayer);
+
+            if (coloredField.getStatus()== Field.FieldStatus.RED){
+                redScore += board.getSize();
+            }else{
+                blueScore += board.getSize();
+            }
         }
         if (isLeftDiagonalFilled(coloredField)) {
             List<Field> diagonal = new ArrayList<>(board.getLeftDiagonal(coloredField));
-            diagonal.sort(Comparator.comparing(Field::getCol));
 
-
-            redScore += getScoreForPlayer(diagonal, redPlayer);
-            blueScore += getScoreForPlayer(diagonal, bluePlayer);
+            if (coloredField.getStatus()== Field.FieldStatus.RED){
+                redScore += diagonal.size();
+            }else{
+                blueScore += diagonal.size();
+            }
         }
         if (isRightDiagonalFilled(coloredField)) {
 
             List<Field> diagonal = new ArrayList<>(board.getRightDiagonal(coloredField));
-            diagonal.sort(Comparator.comparing(Field::getCol));
-            redScore += getScoreForPlayer(diagonal, redPlayer);
-            blueScore += getScoreForPlayer(diagonal, bluePlayer);
+
+            if (coloredField.getStatus()== Field.FieldStatus.RED){
+                redScore += diagonal.size();
+            }else{
+                blueScore += diagonal.size();
+            }
         }
 
         redPlayer.addToScore(redScore);
         bluePlayer.addToScore(blueScore);
-    }
-
-    private int getScoreForPlayer(List<Field> orderedFieldList, Player player) {
-        int result = 0;
-        int valueToAdd = 0;
-
-        for (Field field : orderedFieldList) {
-            if (field.statusToColor() != player.getColor()) {
-                if (valueToAdd >= 2) {
-                    result += valueToAdd;
-                }
-                valueToAdd = 0;
-            } else {
-                valueToAdd += 1;
-            }
-        }
-        if (valueToAdd >= 2) {
-            result += valueToAdd;
-        }
-        return result;
     }
 
     public boolean isRowFilled(Field coloredField) {
