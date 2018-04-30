@@ -1,3 +1,7 @@
+package app;
+
+import app.utils.CLIColors;
+
 import java.util.Objects;
 
 public class Field {
@@ -66,7 +70,7 @@ public class Field {
 
     @Override
     public String toString() {
-        return "Field{" +
+        return "app.Field{" +
                 "col=" + col +
                 ", row=" + row +
                 ", status=" + status +
@@ -77,10 +81,10 @@ public class Field {
         String fieldStatus;
         switch (status) {
             case RED:
-                fieldStatus = "R";
+                fieldStatus = CLIColors.ANSI_RED + "R" + CLIColors.ANSI_RESET;
                 break;
             case BLUE:
-                fieldStatus = "B";
+                fieldStatus = CLIColors.ANSI_BLUE + "B" + CLIColors.ANSI_RESET;
                 break;
             default:
                 fieldStatus = " ";
@@ -95,7 +99,7 @@ public class Field {
             case BLUE:
                 return Player.Color.BLUE;
             default:
-                System.out.println("Field.statusToColor, try get status to color with empty field");
+                System.out.println("app.Field.statusToColor, try get status to color with empty field");
                 return null;
         }
     }

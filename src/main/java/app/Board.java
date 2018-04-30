@@ -1,3 +1,5 @@
+package app;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -62,7 +64,7 @@ public class Board {
 
     @Override
     public String toString() {
-        return "Board{" +
+        return "app.Board{" +
                 "size=" + size +
                 ", fields=" + fields +
                 '}';

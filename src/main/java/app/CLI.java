@@ -1,27 +1,34 @@
-import java.util.Scanner;
-import java.util.concurrent.TimeUnit;
+package app;
 
-public class UserInterface {
+import app.AIAlgorithms.AlgorithmsFacade;
+
+import java.util.Scanner;
+
+class CLI {
 
     private Scanner scanner = new Scanner(System.in);
     private int size;
     private Board board;
-    private PlayerAI redPlayer;
-    private PlayerAI bluePlayer;
+    private Player redPlayer;
+    private Player bluePlayer;
     private ActivePlayer activePlayer;
     private ComputeScoreAlgorithm computeScoreAlgorithm;
-
+    private GameMode gameMode;
+    private AlgorithmsFacade algorithms;
     private enum ActivePlayer {
         RED, BLUE
     }
 
-    public void start() {
+    private enum GameMode {
+        AI_VS_AI, USER_VS_AI, USER_VS_USER
+    }
+
+    void start() {
         greetings();
         size = getBoardSizeFromUser();
+        gameMode = getGameModeFromUser();
         board = new Board(size);
-        redPlayer = new PlayerAI(Player.Color.RED, board);
-        bluePlayer = new PlayerAI(Player.Color.BLUE, board);
-        computeScoreAlgorithm = new ComputeScoreAlgorithm(board, redPlayer, bluePlayer);
+        initProperties(board);
         initPlayerTour();
         printHelp();
         while (!board.isFilled()) {
@@ -29,18 +36,10 @@ public class UserInterface {
             printScore();
             printBoard();
             printWhoMovesNow();
-            if (activePlayer == ActivePlayer.BLUE) field = getFieldFromAI();
-            else field = getFieldFromAI();
+            field = getFieldFromPlayer();
             changeFieldStatus(field);
             computeScoreAlgorithm.computeAndAssignScoreIfPossible(field);
             changePlayerTour();
-
-            try {
-                TimeUnit.SECONDS.sleep(1);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
         }
 
         printBoard();
@@ -48,13 +47,38 @@ public class UserInterface {
 
     }
 
+    private void initProperties(Board board){
+        redPlayer = new Player(Player.Color.RED);
+        bluePlayer = new Player(Player.Color.BLUE);
+        computeScoreAlgorithm = new ComputeScoreAlgorithm(board, redPlayer, bluePlayer);
+        algorithms = new AlgorithmsFacade(board);
+    }
+
+    private Field getFieldFromPlayer() {
+        Field field = null;
+        switch (gameMode) {
+            case AI_VS_AI:
+                field = getFieldFromAI();
+                break;
+            case USER_VS_AI:
+                if (activePlayer == ActivePlayer.BLUE) {
+                    field = getFieldFromAI();
+                } else {
+                    field = getFieldFromUser();
+                }
+                break;
+            case USER_VS_USER:
+                field = getFieldFromUser();
+                break;
+        }
+        return field;
+    }
+
     private Field getFieldFromAI() {
         if (activePlayer == ActivePlayer.BLUE) {
-            return bluePlayer.closeLineOrRandom();
-//            return null;
+            return algorithms.closeLineOrRandomMove();
         } else {
-            return redPlayer.makeRandomMove();
-//            return null;
+            return algorithms.randomMove();
         }
     }
 
@@ -131,6 +155,23 @@ public class UserInterface {
             }
         }
         return field;
+    }
+
+    private GameMode getGameModeFromUser() {
+        System.out.println("Chose game mode: \n1 - User vs User\n2 - User vs AI\n3 - AI vs AI");
+        String userInput = scanner.next();
+        switch (userInput) {
+            case "1":
+                return GameMode.USER_VS_USER;
+            case "2":
+                return GameMode.USER_VS_AI;
+            case "3":
+                return GameMode.AI_VS_AI;
+            default:
+                System.out.println("Wrong input, try again.");
+                getGameModeFromUser();
+        }
+        return null;
     }
 
     private void changeFieldStatus(Field field) {

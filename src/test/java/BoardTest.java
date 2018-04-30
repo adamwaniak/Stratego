@@ -1,3 +1,5 @@
+import app.Board;
+import app.Field;
 import org.junit.Assert;
 import org.junit.Test;
 

@@ -1,3 +1,5 @@
+package app;
+
 public class Player {
     private int score;
     private Color color;
