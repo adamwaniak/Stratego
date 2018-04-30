@@ -76,9 +76,10 @@ class CLI {
 
     private Field getFieldFromAI() {
         if (activePlayer == ActivePlayer.BLUE) {
-            return algorithms.closeLineOrRandomMove();
+            return algorithms.minMaxAlgorithm(2);
+
         } else {
-            return algorithms.randomMove();
+            return algorithms.minMaxAlgorithm(4);
         }
     }
 

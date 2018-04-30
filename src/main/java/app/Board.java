@@ -13,6 +13,14 @@ public class Board {
         this.fields = getFilledBoard(size);
     }
 
+    public Board(Board other){
+        this.size = other.size;
+        this.fields = new ArrayList<>();
+        for (Field field: other.fields){
+            this.fields.add(new Field(field));
+        }
+    }
+
 
     public Field getField(int row, int col) {
         return fields.stream().filter((Field field) -> field.getRow() == row && field.getCol() == col).collect(Collectors.toList()).get(0);
@@ -34,6 +42,10 @@ public class Board {
     public Board setFields(List<Field> fields) {
         this.fields = fields;
         return this;
+    }
+
+    public List<Field> getEmptyFields(){
+        return fields.stream().filter(it -> it.getStatus()==Field.FieldStatus.EMPTY).collect(Collectors.toList());
     }
 
     private List<Field> getFilledBoard(int size) {

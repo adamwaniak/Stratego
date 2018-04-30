@@ -17,6 +17,12 @@ public class Field {
         status = FieldStatus.EMPTY;
     }
 
+    public Field(Field other){
+        this.col = other.col;
+        this.row = other.row;
+        this.status = other.status;
+    }
+
     private int col;
     private int row;
     private FieldStatus status;

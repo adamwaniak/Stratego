@@ -3,7 +3,7 @@ package app;
 import java.util.ArrayList;
 import java.util.List;
 
-class ComputeScoreAlgorithm {
+public class ComputeScoreAlgorithm {
     private Board board;
     private Player redPlayer;
     private Player bluePlayer;
@@ -14,47 +14,37 @@ class ComputeScoreAlgorithm {
         this.bluePlayer = bluePlayer;
     }
 
-    void computeAndAssignScoreIfPossible(Field coloredField) {
-        int redScore = 0;
-        int blueScore = 0;
+    public ComputeScoreAlgorithm() {
+    }
+
+    public void computeAndAssignScoreIfPossible(Field coloredField) {
+        int score = computeScore(coloredField);
+        if (coloredField.getStatus() == Field.FieldStatus.RED) {
+            redPlayer.addToScore(score);
+
+        } else {
+            bluePlayer.addToScore(score);
+        }
+    }
+
+
+    public int computeScore(Field coloredField) {
+        int score = 0;
         if (isRowFilled(coloredField)) {
-            if (coloredField.getStatus()== Field.FieldStatus.RED){
-                redScore += board.getSize();
-            }else{
-                blueScore += board.getSize();
-            }
+            score += board.getSize();
         }
         if (isColumnFilled(coloredField)) {
-
-
-            if (coloredField.getStatus()== Field.FieldStatus.RED){
-                redScore += board.getSize();
-            }else{
-                blueScore += board.getSize();
-            }
+            score += board.getSize();
         }
         if (isLeftDiagonalFilled(coloredField)) {
             List<Field> diagonal = new ArrayList<>(board.getLeftDiagonal(coloredField));
-
-            if (coloredField.getStatus()== Field.FieldStatus.RED){
-                redScore += diagonal.size();
-            }else{
-                blueScore += diagonal.size();
-            }
+            score += diagonal.size();
         }
         if (isRightDiagonalFilled(coloredField)) {
-
             List<Field> diagonal = new ArrayList<>(board.getRightDiagonal(coloredField));
-
-            if (coloredField.getStatus()== Field.FieldStatus.RED){
-                redScore += diagonal.size();
-            }else{
-                blueScore += diagonal.size();
-            }
+            score += diagonal.size();
         }
-
-        redPlayer.addToScore(redScore);
-        bluePlayer.addToScore(blueScore);
+        return score;
     }
 
     private boolean isRowFilled(Field coloredField) {
@@ -75,6 +65,9 @@ class ComputeScoreAlgorithm {
         return board.getRightDiagonal(coloredField).stream().allMatch(field -> field.getStatus() != Field.FieldStatus.EMPTY) && board.getRightDiagonal(coloredField).size() >= 2;
     }
 
-
+    public ComputeScoreAlgorithm setBoard(Board board) {
+        this.board = board;
+        return this;
+    }
 }
 
