@@ -15,6 +15,7 @@ class CLI {
     private ComputeScoreAlgorithm computeScoreAlgorithm;
     private GameMode gameMode;
     private AlgorithmsFacade algorithms;
+
     private enum ActivePlayer {
         RED, BLUE
     }
@@ -36,7 +37,10 @@ class CLI {
             printScore();
             printBoard();
             printWhoMovesNow();
+            long time = System.currentTimeMillis();
             field = getFieldFromPlayer();
+            long time2 = System.currentTimeMillis();
+            System.out.println("Exec time: " + (time2 - time));
             changeFieldStatus(field);
             computeScoreAlgorithm.computeAndAssignScoreIfPossible(field);
             changePlayerTour();
@@ -47,7 +51,7 @@ class CLI {
 
     }
 
-    private void initProperties(Board board){
+    private void initProperties(Board board) {
         redPlayer = new Player(Player.Color.RED);
         bluePlayer = new Player(Player.Color.BLUE);
         computeScoreAlgorithm = new ComputeScoreAlgorithm(board, redPlayer, bluePlayer);
@@ -76,10 +80,9 @@ class CLI {
 
     private Field getFieldFromAI() {
         if (activePlayer == ActivePlayer.BLUE) {
-            return algorithms.minMaxAlgorithm(2);
-
+            return algorithms.alphaBetaAlgorithm(3);
         } else {
-            return algorithms.minMaxAlgorithm(4);
+            return algorithms.alphaBetaAlgorithm();
         }
     }
 
@@ -120,8 +123,19 @@ class CLI {
     }
 
     private void initPlayerTour() {
-        if (Math.random() > 0.5) activePlayer = ActivePlayer.RED;
-        else activePlayer = ActivePlayer.BLUE;
+        System.out.println("Choose first player:\n1 - Red\n2 - Blue");
+        String input = scanner.next();
+        switch (input) {
+            case "1":
+                activePlayer = ActivePlayer.RED;
+                break;
+            case "2":
+                activePlayer = ActivePlayer.BLUE;
+                break;
+            default:
+                System.out.println("Wrong input, try again");
+                initPlayerTour();
+        }
     }
 
     private void printWhoMovesNow() {

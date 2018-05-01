@@ -8,10 +8,13 @@ public class AlgorithmsFacade {
     private CloseLineAlgorithm closeLineAlgorithm;
     private RandomAlgorithm randomAlgorithm;
     private MinMaxAlgorithm minMaxAlgorithm;
+    private AlphaBetaAlgorithm alphaBetaAlgorithm;
+
     public AlgorithmsFacade(Board board) {
         closeLineAlgorithm = new CloseLineAlgorithm(board);
         randomAlgorithm = new RandomAlgorithm(board);
         minMaxAlgorithm = new MinMaxAlgorithm(board);
+        alphaBetaAlgorithm = new AlphaBetaAlgorithm(board);
     }
 
     public Field randomMove(){
@@ -29,4 +32,22 @@ public class AlgorithmsFacade {
         }
         return field;
     }
+
+    public Field alphaBetaAlgorithm(int maxDepth){
+        Field field =  alphaBetaAlgorithm.getComputeField(maxDepth);
+        if (field==null){
+            System.out.println("field is null from alphabeta");
+        }
+        return field;
+    }
+
+    public Field alphaBetaAlgorithm(){
+        Field field =  alphaBetaAlgorithm.getComputeField();
+        if (field==null){
+            System.out.println("field is null from alphabeta");
+        }
+        return field;
+    }
+
+
 }
