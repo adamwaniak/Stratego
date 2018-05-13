@@ -7,18 +7,36 @@ import app.Field;
 import java.util.List;
 
 public class MinMaxAlgorithm {
-    public static final int MAX_DEPTH = 3;
     private Board board;
     private ComputeScoreAlgorithm computeScoreAlgorithm;
+    private CloseLineAlgorithm closeLineAlgorithm;
 
-    public MinMaxAlgorithm(Board board) {
+    public MinMaxAlgorithm(Board board, CloseLineAlgorithm closeLineAlgorithm) {
         this.board = board;
         computeScoreAlgorithm = new ComputeScoreAlgorithm();
         computeScoreAlgorithm.setBoard(board);
+        this.closeLineAlgorithm = closeLineAlgorithm;
     }
 
     public Field getComputeField(int maxDepth) {
         return minmax(maxDepth);
+    }
+
+    public Field getComputeField(){
+        int size = board.getEmptyFields().size();
+        if (size > 50) return closeLineAlgorithm.closeLineOrRandom();
+
+
+
+        if (size > 35) return minmax(2);
+
+        if (size > 25) return minmax(3);
+
+        if (size > 15) return minmax(4);
+
+        if (size > 5) return minmax(5);
+
+        return minmax(6);
     }
 
     private Field minmax(int maxDepth) {

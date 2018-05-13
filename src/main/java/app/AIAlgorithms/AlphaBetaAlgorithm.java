@@ -8,18 +8,26 @@ public class AlphaBetaAlgorithm {
 
     private Board board;
     private ComputeScoreAlgorithm computeScoreAlgorithm;
+    private CloseLineAlgorithm closeLineAlgorithm;
 
-    public AlphaBetaAlgorithm(Board board) {
+    public AlphaBetaAlgorithm(Board board, CloseLineAlgorithm closeLineAlgorithm) {
         this.board = board;
         computeScoreAlgorithm = new ComputeScoreAlgorithm();
         computeScoreAlgorithm.setBoard(board);
+        this.closeLineAlgorithm = closeLineAlgorithm;
+
     }
 
-    public Field getComputeField(){
+    public Field getComputeField() {
         int size = board.getEmptyFields().size();
+        System.out.println("size: " + size);
+        if (size > 70) return closeLineAlgorithm.closeLineOrRandom();
+
+        if (size > 50) return alphaBeta(2);
+
         if (size > 30) return alphaBeta(3);
 
-        if (size > 20) return alphaBeta(4);
+        if (size > 25) return alphaBeta(4);
 
         if (size > 10) return alphaBeta(5);
 

@@ -27,25 +27,32 @@ class CLI {
     void start() {
         greetings();
         size = getBoardSizeFromUser();
-        gameMode = getGameModeFromUser();
+        gameMode = GameMode.AI_VS_AI;
         board = new Board(size);
         initProperties(board);
         initPlayerTour();
-        printHelp();
+//        printHelp();
+        long redPlayerTime = 0;
+        long bluePlayerTime = 0;
         while (!board.isFilled()) {
             Field field;
             printScore();
-            printBoard();
+//            printBoard();
             printWhoMovesNow();
             long time = System.currentTimeMillis();
             field = getFieldFromPlayer();
             long time2 = System.currentTimeMillis();
-            System.out.println("Exec time: " + (time2 - time));
+            if (activePlayer == ActivePlayer.BLUE) {
+                bluePlayerTime += time2 - time;
+            } else {
+                redPlayerTime += time2 - time;
+            }
+
             changeFieldStatus(field);
             computeScoreAlgorithm.computeAndAssignScoreIfPossible(field);
             changePlayerTour();
         }
-
+        System.out.println("Execution time for red player: " + redPlayerTime + ", for blue player: " + bluePlayerTime);
         printBoard();
         printScore();
 
@@ -80,7 +87,7 @@ class CLI {
 
     private Field getFieldFromAI() {
         if (activePlayer == ActivePlayer.BLUE) {
-            return algorithms.alphaBetaAlgorithm(3);
+            return algorithms.minMaxAlgorithm();
         } else {
             return algorithms.alphaBetaAlgorithm();
         }

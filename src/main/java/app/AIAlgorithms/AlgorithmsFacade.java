@@ -13,37 +13,41 @@ public class AlgorithmsFacade {
     public AlgorithmsFacade(Board board) {
         closeLineAlgorithm = new CloseLineAlgorithm(board);
         randomAlgorithm = new RandomAlgorithm(board);
-        minMaxAlgorithm = new MinMaxAlgorithm(board);
-        alphaBetaAlgorithm = new AlphaBetaAlgorithm(board);
+        minMaxAlgorithm = new MinMaxAlgorithm(board, closeLineAlgorithm);
+        alphaBetaAlgorithm = new AlphaBetaAlgorithm(board, closeLineAlgorithm);
     }
 
-    public Field randomMove(){
+    public Field randomMove() {
         return randomAlgorithm.makeRandomMove();
     }
 
-    public Field closeLineOrRandomMove(){
+    public Field closeLineOrRandomMove() {
         return closeLineAlgorithm.closeLineOrRandom();
     }
 
-    public Field minMaxAlgorithm(int maxDepth){
-        Field field =  minMaxAlgorithm.getComputeField(maxDepth);
-        if (field==null){
+    public Field minMaxAlgorithm(int maxDepth) {
+        Field field = minMaxAlgorithm.getComputeField(maxDepth);
+        if (field == null) {
             System.out.println("field is null from minmax");
         }
         return field;
     }
 
-    public Field alphaBetaAlgorithm(int maxDepth){
-        Field field =  alphaBetaAlgorithm.getComputeField(maxDepth);
-        if (field==null){
+    public Field minMaxAlgorithm() {
+        return minMaxAlgorithm.getComputeField();
+    }
+
+    public Field alphaBetaAlgorithm(int maxDepth) {
+        Field field = alphaBetaAlgorithm.getComputeField(maxDepth);
+        if (field == null) {
             System.out.println("field is null from alphabeta");
         }
         return field;
     }
 
-    public Field alphaBetaAlgorithm(){
-        Field field =  alphaBetaAlgorithm.getComputeField();
-        if (field==null){
+    public Field alphaBetaAlgorithm() {
+        Field field = alphaBetaAlgorithm.getComputeField();
+        if (field == null) {
             System.out.println("field is null from alphabeta");
         }
         return field;
