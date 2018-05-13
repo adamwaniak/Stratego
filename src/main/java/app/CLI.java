@@ -37,10 +37,7 @@ class CLI {
             printScore();
             printBoard();
             printWhoMovesNow();
-            long time = System.currentTimeMillis();
             field = getFieldFromPlayer();
-            long time2 = System.currentTimeMillis();
-            System.out.println("Exec time: " + (time2 - time));
             changeFieldStatus(field);
             computeScoreAlgorithm.computeAndAssignScoreIfPossible(field);
             changePlayerTour();
