@@ -45,8 +45,10 @@ public class Board {
     }
 
     public List<Field> getEmptyFields(){
-        return fields.stream().filter(it -> it.getStatus()==Field.FieldStatus.EMPTY).collect(Collectors.toList());
+        List<Field> result = fields.stream().filter(it -> it.getStatus()==Field.FieldStatus.EMPTY).collect(Collectors.toList());
+        return result;
     }
+
 
     private List<Field> getFilledBoard(int size) {
         List<Field> fields = new ArrayList<>();

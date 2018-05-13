@@ -87,9 +87,9 @@ class CLI {
 
     private Field getFieldFromAI() {
         if (activePlayer == ActivePlayer.BLUE) {
-            return algorithms.minMaxAlgorithm();
+            return algorithms.alphaBetaAlgorithm("",true);
         } else {
-            return algorithms.alphaBetaAlgorithm();
+            return algorithms.alphaBetaAlgorithm("",false);
         }
     }
 

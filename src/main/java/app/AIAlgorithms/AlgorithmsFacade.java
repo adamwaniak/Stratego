@@ -9,12 +9,16 @@ public class AlgorithmsFacade {
     private RandomAlgorithm randomAlgorithm;
     private MinMaxAlgorithm minMaxAlgorithm;
     private AlphaBetaAlgorithm alphaBetaAlgorithm;
+    private AlphaBetaAlgorithm alphaBetaAlgorithmPriorEnemy;
+    private AlphaBetaAlgorithm alphaBetaAlgorithmPriorPlayer;
 
     public AlgorithmsFacade(Board board) {
         closeLineAlgorithm = new CloseLineAlgorithm(board);
         randomAlgorithm = new RandomAlgorithm(board);
         minMaxAlgorithm = new MinMaxAlgorithm(board, closeLineAlgorithm);
-        alphaBetaAlgorithm = new AlphaBetaAlgorithm(board, closeLineAlgorithm);
+        alphaBetaAlgorithm = new AlphaBetaAlgorithm(board, closeLineAlgorithm, "");
+        alphaBetaAlgorithmPriorEnemy = new AlphaBetaAlgorithm(board,closeLineAlgorithm,"enemy");
+        alphaBetaAlgorithmPriorPlayer = new AlphaBetaAlgorithm(board,closeLineAlgorithm,"player");
     }
 
     public Field randomMove() {
@@ -45,8 +49,15 @@ public class AlgorithmsFacade {
         return field;
     }
 
-    public Field alphaBetaAlgorithm() {
-        Field field = alphaBetaAlgorithm.getComputeField();
+    public Field alphaBetaAlgorithm(String prior, boolean order) {
+        Field field;
+        if (prior.equals("enemy")){
+            field = alphaBetaAlgorithmPriorEnemy.getComputeField(order);
+        }else if(prior.equals("player")){
+            field = alphaBetaAlgorithmPriorPlayer.getComputeField(order);
+        }else{
+            field = alphaBetaAlgorithm.getComputeField(order);
+        }
         if (field == null) {
             System.out.println("field is null from alphabeta");
         }

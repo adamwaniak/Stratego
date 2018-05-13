@@ -4,21 +4,27 @@ import app.Board;
 import app.ComputeScoreAlgorithm;
 import app.Field;
 
+import java.util.Collections;
+import java.util.List;
+
 public class AlphaBetaAlgorithm {
 
     private Board board;
     private ComputeScoreAlgorithm computeScoreAlgorithm;
     private CloseLineAlgorithm closeLineAlgorithm;
+    private String prior;
+    private boolean order;
 
-    public AlphaBetaAlgorithm(Board board, CloseLineAlgorithm closeLineAlgorithm) {
+    public AlphaBetaAlgorithm(Board board, CloseLineAlgorithm closeLineAlgorithm, String prior) {
         this.board = board;
         computeScoreAlgorithm = new ComputeScoreAlgorithm();
         computeScoreAlgorithm.setBoard(board);
         this.closeLineAlgorithm = closeLineAlgorithm;
-
+        this.prior = prior;
     }
 
-    public Field getComputeField() {
+    public Field getComputeField( boolean order) {
+        this.order = order;
         int size = board.getEmptyFields().size();
         System.out.println("size: " + size);
         if (size > 70) return closeLineAlgorithm.closeLineOrRandom();
@@ -44,7 +50,11 @@ public class AlphaBetaAlgorithm {
         int maxValue = Integer.MIN_VALUE;
         int aRoot = Integer.MIN_VALUE;
         int bRoot = Integer.MAX_VALUE;
-        for (Field field : board.getEmptyFields()) {
+        List<Field> emptyFields = board.getEmptyFields();
+        if (!order){
+            Collections.shuffle(emptyFields);
+        }
+        for (Field field : emptyFields) {
             field.setStatus(Field.FieldStatus.RED);
             int nodeValue = computeScoreAlgorithm.computeScore(field);
             int value = minValue(maxDepth - 1, nodeValue, 0, aRoot, bRoot);
@@ -59,12 +69,23 @@ public class AlphaBetaAlgorithm {
 
     private int maxValue(int maxDepth, int playerScore, int enemyScore, int aRoot, int bRoot) {
         if (maxDepth == 0 || board.getEmptyFields().isEmpty()) {
-            return playerScore - enemyScore;
+            if (prior.equals("enemy")){
+                return playerScore - enemyScore*100;
+            } else if (prior.equals("player")){
+                return playerScore * 100 - enemyScore;
+            }else {
+                return playerScore - enemyScore;
+            }
         }
         int a = aRoot;
         int b = bRoot;
         int maxValue = Integer.MIN_VALUE;
-        for (Field field : board.getEmptyFields()) {
+
+        List<Field> emptyFields = board.getEmptyFields();
+        if (!order){
+            Collections.shuffle(emptyFields);
+        }
+        for (Field field : emptyFields) {
             field.setStatus(Field.FieldStatus.RED);
             int nodeValue = computeScoreAlgorithm.computeScore(field);
             int value = minValue(maxDepth - 1, nodeValue + playerScore, enemyScore, a, b);
@@ -90,8 +111,13 @@ public class AlphaBetaAlgorithm {
         int a = aRoot;
         int b = bRoot;
         int minValue = Integer.MAX_VALUE;
-        for (Field field : board.getEmptyFields()) {
-            field.setStatus(Field.FieldStatus.RED);
+
+        List<Field> emptyFields = board.getEmptyFields();
+        if (!order){
+            Collections.shuffle(emptyFields);
+        }
+        for (Field field : emptyFields) {
+
             int nodeValue = computeScoreAlgorithm.computeScore(field);
             int value = maxValue(maxDepth - 1, playerScore, enemyScore + nodeValue, a, b);
             if (value < minValue) {
@@ -110,3 +136,5 @@ public class AlphaBetaAlgorithm {
     }
 
 }
+
+
